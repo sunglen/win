@@ -23,7 +23,7 @@ print f.strip('\x00')
 
 ds = WinDLL('DasScanSimu.dll')
 
-ds.ScanInit();
+ds.ScanInit()
 
 ds.LoadProtocol(c_char_p("proto1.xml"))
 
