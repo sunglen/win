@@ -9,13 +9,17 @@ from ctypes import *
 
 os.chdir('C:\\Program Files\\test\\')
 
-d="\x00"*512
+#There are 2 ways for string buffer
 
-f="\x00"*512
+#d="\x00"*512
+d=create_string_buffer(512)
 
 #Current Directory will be changed if chdir
-windll.kernel32.GetCurrentDirectoryA(c_int(512), c_char_p(d))
-print d.strip('\x00')
+windll.kernel32.GetCurrentDirectoryA(c_int(sizeof(d)), d)
+#print d.strip('\x00')
+print d[:]
+
+f="\x00"*512
 
 #Module File Name will be always C:\Python27\python.exe if we run it by python it.py
 windll.kernel32.GetModuleFileNameA(None, c_char_p(f), c_int(512))
