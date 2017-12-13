@@ -71,6 +71,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <CustomBuildAfterTargets>Build</CustomBuildAfterTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -107,6 +108,10 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <OutputFile>../../../run13_64/$(TargetName)$(TargetExt)</OutputFile>
     </Link>
+    <CustomBuildStep>
+      <Command>xcopy "$(OutDir)$(TargetName).lib" "../../../lib/"</Command>
+      <Inputs>$(TargetName)</Inputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>

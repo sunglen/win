@@ -10,6 +10,7 @@
 #include <malloc.h>
 #include <io.h>
 #include <WinSock2.h>
+#include <locale.h>
 #include "support.h"
 #ifdef _MT
 #include <process.h>

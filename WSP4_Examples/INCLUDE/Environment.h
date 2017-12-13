@@ -14,6 +14,7 @@
 /* window on the bottom, add   /D "UNICODE"     */
 /* The same is true for DLLLIB */
 //#define UNICODE
+//should undef UNICODE, if you want to use ascii output in cp936 cmd box
 //#undef UNICODE
 
 #ifdef UNICODE

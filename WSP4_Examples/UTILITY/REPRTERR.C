@@ -12,6 +12,9 @@ VOID ReportError (LPCTSTR userMessage, DWORD exitCode, BOOL printErrorMessage)
 {
 	DWORD eMsgLen, errNum = GetLastError ();
 	LPTSTR lpvSysMsg;
+
+	//set locale to zh-CN, so you can output Chinese in cp936 cmd box
+	setlocale(LC_ALL, "zh-CN");
 	_ftprintf (stderr, _T("%s\n"), userMessage);
 	if (printErrorMessage) {
 		eMsgLen = FormatMessage (FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
