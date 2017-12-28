@@ -8,3 +8,5 @@ bool scanFinished=true;
 
 #define MAX_PATH_LONG 32767  /* Very long path names with \\?\ prefix. */
 #define MAX_NAME 256    /* Name length - users and groups */
+
+#define BUF_SIZE 16384

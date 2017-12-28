@@ -33,6 +33,10 @@ void ScanGo()
 	TCHAR datName[MAX_NAME + 1], datDir1[MAX_NAME + 1], datDir2[MAX_NAME + 1], datFile[MAX_NAME + 1];
 
 	HANDLE hFile = NULL;
+	HANDLE hSrc = NULL;
+
+	DWORD nIn, nOut;
+	CHAR buffer[BUF_SIZE];
 
 	printf("Scan start\n");
 	scanFinished = false;
@@ -72,6 +76,20 @@ void ScanGo()
 			if (hFile == INVALID_HANDLE_VALUE) {
 				fprintf(stderr, "DasScanSimu: create %s failed.\n", datFile);
 			}
+
+			//copy src.pd to datFile
+			hSrc = CreateFile("C:\\Insitum.App\\src.pd", GENERIC_READ, FILE_SHARE_READ, NULL,
+				OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+			if (hSrc == INVALID_HANDLE_VALUE) {
+				fprintf(stderr, "DasScanSimu: Cannot open src.pd.\n");
+			}
+
+			while (ReadFile(hSrc, buffer, BUF_SIZE, &nIn, NULL) && nIn > 0) {
+				WriteFile(hFile, buffer, nIn, &nOut, NULL);
+				if (nIn != nOut) {
+					fprintf(stderr, "DasScanSimu: Fatal write error.\n");
+				}
+			}
 		}
 	} else if (ERROR_ALREADY_EXISTS == GetLastError()) {
 		fprintf(stderr, "DasScanSimu: directory %s already exists.\n", datDir1);
@@ -81,6 +99,10 @@ void ScanGo()
 
 	if (hFile != NULL) {
 		CloseHandle(hFile);
+	}
+	
+	if (hFile != NULL) {
+		CloseHandle(hSrc);
 	}
 
 	SetCurrentDirectory(currPath);	 /* Restore working directory. */
