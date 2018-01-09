@@ -10,3 +10,5 @@ bool scanFinished=true;
 #define MAX_NAME 256    /* Name length - users and groups */
 
 #define BUF_SIZE 16384
+
+char protocol[MAX_NAME + 1];

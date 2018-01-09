@@ -1,31 +1,10 @@
 #include "DasScanSimu.h"
 #include <stdio.h>
 #include <windows.h>
+#include <Shlwapi.h>
 
-void CALLBACK ScanStop(LPVOID lpArgToCompletionRoutine, DWORD dwTimerLowValue, DWORD dwTimerHighValue)
+void copyPdFile(const char* testName)
 {
-	printf("Scan Finished\n");
-	scanFinished = true;
-
-	printf("pd data saved\n");
-}
-
-void ScanInit()
-{
-	printf("ScanInit\n");
-	Sleep(500);
-}
-
-void LoadProtocol(const char* protocolName)
-{
-	printf("Load protocol file %s\n", protocolName);
-}
-
-void ScanGo()
-{
-	HANDLE timer;
-	LARGE_INTEGER t;
-
 	DWORD pathLength;
 	TCHAR currPath[MAX_PATH_LONG + 1];
 
@@ -38,26 +17,17 @@ void ScanGo()
 	DWORD nIn, nOut;
 	CHAR buffer[BUF_SIZE];
 
-	printf("Scan start\n");
-	scanFinished = false;
-
-	//timer = CreateWaitableTimer(NULL, FALSE, NULL);
-	timer = CreateWaitableTimer(NULL, TRUE, NULL);
-	if (timer == NULL){
-		fprintf(stderr, "DasScanSimu: Create timer failed.\n");
-		return;
-	}
-
-	t.QuadPart = -10 * 10000000;
-	SetWaitableTimer(timer, &t, 0, ScanStop, NULL, FALSE);
+	TCHAR srcName[MAX_NAME + 1];
 
 	pathLength = GetCurrentDirectory(MAX_PATH_LONG, currPath);
-	if (pathLength == 0 || pathLength >= MAX_PATH_LONG) {	
+	if (pathLength == 0 || pathLength >= MAX_PATH_LONG) {
 		fprintf(stderr, "DasScanSimu: GetCurrentDirectory failed.\n");
 		return;
 	}
 
 	SetCurrentDirectory("d:\\pangu.dat\\raw\\");
+
+	_snprintf_s(srcName, MAX_NAME, "C:\\Insitum.App\\%s.pd", testName);
 
 	GetSystemTime(&currentTime);
 
@@ -77,11 +47,11 @@ void ScanGo()
 				fprintf(stderr, "DasScanSimu: create %s failed.\n", datFile);
 			}
 
-			//copy src.pd to datFile
-			hSrc = CreateFile("C:\\Insitum.App\\src.pd", GENERIC_READ, FILE_SHARE_READ, NULL,
+			//copy srcName to datFile
+			hSrc = CreateFile(srcName, GENERIC_READ, FILE_SHARE_READ, NULL,
 				OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 			if (hSrc == INVALID_HANDLE_VALUE) {
-				fprintf(stderr, "DasScanSimu: Cannot open src.pd.\n");
+				fprintf(stderr, "DasScanSimu: Cannot open %s.\n", srcName);
 			}
 
 			while (ReadFile(hSrc, buffer, BUF_SIZE, &nIn, NULL) && nIn > 0) {
@@ -91,21 +61,101 @@ void ScanGo()
 				}
 			}
 		}
-	} else if (ERROR_ALREADY_EXISTS == GetLastError()) {
+	}
+	else if (ERROR_ALREADY_EXISTS == GetLastError()) {
 		fprintf(stderr, "DasScanSimu: directory %s already exists.\n", datDir1);
-	} else {
+	}
+	else {
 		fprintf(stderr, "DasScanSimu: create directory %s failed.\n", datDir1);
 	}
 
 	if (hFile != NULL) {
 		CloseHandle(hFile);
 	}
-	
+
 	if (hFile != NULL) {
 		CloseHandle(hSrc);
 	}
 
 	SetCurrentDirectory(currPath);	 /* Restore working directory. */
+}
+
+void CALLBACK ScanStop(LPVOID lpArgToCompletionRoutine, DWORD dwTimerLowValue, DWORD dwTimerHighValue)
+{
+	printf("Scan Finished\n");
+
+	if (StrCmp(protocol, "Drift.xml") == 0){
+		copyPdFile("Drift1");
+		SleepEx(1000, TRUE);
+		copyPdFile("Drift2");
+	}
+	else if (StrCmp(protocol, "Leakage.xml") == 0){
+		copyPdFile("Leakage1");
+		SleepEx(1000, TRUE);
+		copyPdFile("Leakage2");
+	}
+	else if (StrCmp(protocol, "mARatio.xml") == 0){
+		copyPdFile("mARatio1");
+		SleepEx(1000, TRUE);
+		copyPdFile("mARatio2");
+	}
+	else if (StrCmp(protocol, "RD.xml") == 0){
+		copyPdFile("RD1");
+		SleepEx(1000, TRUE);
+		copyPdFile("RD2");
+		SleepEx(1000, TRUE);
+		copyPdFile("RD3");
+	}
+	else if (StrCmp(protocol, "Spectral.xml") == 0){
+		copyPdFile("Spectral1");
+		SleepEx(1000, TRUE);
+		copyPdFile("Spectral2");
+	}
+	else if (StrCmp(protocol, "Z_Align.xml") == 0){
+		copyPdFile("Z_Align1");
+		SleepEx(1000, TRUE);
+		copyPdFile("Z_Align2");
+	}
+	else{
+		copyPdFile(protocol);
+	}
+
+	scanFinished = true;
+
+	printf("pd data saved\n");
+}
+
+void ScanInit()
+{
+	printf("ScanInit\n");
+	Sleep(500);
+}
+
+void LoadProtocol(const char* protocolName)
+{
+	printf("Load protocol file %s\n", protocolName);
+
+	_snprintf_s(protocol, MAX_NAME, "%s", protocolName);
+}
+
+void ScanGo()
+{
+	HANDLE timer;
+	LARGE_INTEGER t;
+
+	printf("Scan start\n");
+	scanFinished = false;
+
+	//timer = CreateWaitableTimer(NULL, FALSE, NULL);
+	timer = CreateWaitableTimer(NULL, TRUE, NULL);
+	if (timer == NULL){
+		fprintf(stderr, "DasScanSimu: Create timer failed.\n");
+		return;
+	}
+
+	//t.QuadPart = -10 * 10000000;
+	t.QuadPart = -2 * 10000000;
+	SetWaitableTimer(timer, &t, 0, ScanStop, NULL, FALSE);
 }
 
 bool IsScanFinished()
