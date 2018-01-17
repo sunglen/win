@@ -86,35 +86,47 @@ void CALLBACK ScanStop(LPVOID lpArgToCompletionRoutine, DWORD dwTimerLowValue, D
 
 	if (StrCmp(protocol, "Drift.xml") == 0){
 		copyPdFile("Drift1");
-		SleepEx(1000, TRUE);
+		SleepEx(2000, TRUE);
 		copyPdFile("Drift2");
 	}
 	else if (StrCmp(protocol, "Leakage.xml") == 0){
 		copyPdFile("Leakage1");
-		SleepEx(1000, TRUE);
+		SleepEx(2000, TRUE);
 		copyPdFile("Leakage2");
 	}
 	else if (StrCmp(protocol, "mARatio.xml") == 0){
 		copyPdFile("mARatio1");
-		SleepEx(1000, TRUE);
+		SleepEx(2000, TRUE);
 		copyPdFile("mARatio2");
 	}
 	else if (StrCmp(protocol, "RD.xml") == 0){
 		copyPdFile("RD1");
-		SleepEx(1000, TRUE);
+		SleepEx(2000, TRUE);
 		copyPdFile("RD2");
-		SleepEx(1000, TRUE);
+		SleepEx(2000, TRUE);
 		copyPdFile("RD3");
 	}
 	else if (StrCmp(protocol, "Spectral.xml") == 0){
 		copyPdFile("Spectral1");
-		SleepEx(1000, TRUE);
+		SleepEx(2000, TRUE);
 		copyPdFile("Spectral2");
 	}
 	else if (StrCmp(protocol, "Z_Align.xml") == 0){
 		copyPdFile("Z_Align1");
-		SleepEx(1000, TRUE);
+		SleepEx(2000, TRUE);
 		copyPdFile("Z_Align2");
+	}
+	else if (StrCmp(protocol, "XDFS.xml") == 0){
+		copyPdFile("XDFS1");
+		SleepEx(2000, TRUE);
+		copyPdFile("XDFS2");
+	}
+	else if (StrCmp(protocol, "ASG.xml") == 0){
+		copyPdFile("ASG1");
+		SleepEx(2000, TRUE);
+		copyPdFile("ASG2");
+		SleepEx(2000, TRUE);
+		copyPdFile("ASG3");
 	}
 	else{
 		copyPdFile(protocol);
